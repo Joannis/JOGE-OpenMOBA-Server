@@ -6,7 +6,6 @@ import JOGE.entities.JOGEPhysicalEntity;
 import JOGE.networking.JOGENetworking;
 import JOGE.networking.JOGEProtocol;
 import JOGE.networking.JOGEtcpNetworking;
-import JOGE.networking.JOGEudpNetworking;
 import JOGE.networking.JOGEudpServer;
 
 public class MyServerProtocol extends JOGEProtocol
@@ -18,41 +17,56 @@ public class MyServerProtocol extends JOGEProtocol
 	
 	public void onReceiveUDPPacket(DatagramPacket packet)
 	{
-		
-	}
-
-	@Override
-	public void onReceiveTCPData(JOGEtcpNetworking connection, int clientID, String data)
-	{
+		JOGEudpServer net = ((JOGEudpServer) networking);
+		String data = net.readStringFromPacket(packet);
+				
 		System.out.println(data);
 		
-		/*
 		if(data.contains("Register"))
 		{
 			String		position	= data.substring(9, data.length());
 			String[]	positions	= position.split("\\s+");
 			
-			Server.players.addEntityToList(new JOGEPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), 20D, 20D)
-			{
-				public void onCollideWith(JOGEPhysicalEntity entity) {	}
-			});
+			int socketID =  net.connections.indexOf(packet.getSocketAddress());
 			
-			try
+			if(socketID != -1 && Server.players.getEntityFromId(socketID) == null)
 			{
-				networking.sendStringToHost("id " + (((JOGEudpServer) networking).connections.size() - 1), packet.getSocketAddress());
+				JOGEPhysicalEntity entity = (JOGEPhysicalEntity) new JOGEPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), 64D, 64D) {
+					
+					@Override
+					public void onCollideWith(JOGEPhysicalEntity entity) {
+						// TODO Auto-generated method stub
+						
+					}
+				}.setDead(false);
 				
-			} catch (SocketException e)
-			{
-				e.printStackTrace();
+				Server.players.addEntityToId(entity, socketID);
+				
+				try
+				{
+					net.sendStringToHost("id " + socketID, packet.getSocketAddress());
+					
+				} catch (SocketException e)
+				{
+					e.printStackTrace();
+				}
+				
+				System.out.println("New Entity @ x=" + positions[0] + " and y=" + positions[1] + " with ID " + socketID);
+				
+			} else {
+				
+				try {
+					net.sendStringToHost("id " + socketID, packet.getSocketAddress());
+				} catch (SocketException e) {
+					e.printStackTrace();
+				}
 			}
-			
-			System.out.println("New Entity @ x=" + positions[0] + " and y=" + positions[1] + " with ID " + (((JOGEudpServer) networking).connections.size() - 2));
 			
 		} else if(data.contains("list"))
 		{
 			try
 			{
-				networking.sendStringToHost("list " + Server.entities.getEntityString(), packet.getSocketAddress());
+				net.sendStringToHost("list " + Server.entities.getEntityString(), packet.getSocketAddress());
 				
 			} catch (SocketException e)
 			{
@@ -63,7 +77,8 @@ public class MyServerProtocol extends JOGEProtocol
 		{
 			try
 			{
-				networking.sendStringToHost("players " + Server.players.getEntityString(), packet.getSocketAddress());
+				System.out.println(Server.players.getSize());
+				net.sendStringToHost("players " + Server.players.getEntityString(), packet.getSocketAddress());
 				
 			} catch (SocketException e)
 			{
@@ -85,29 +100,21 @@ public class MyServerProtocol extends JOGEProtocol
 				Server.players.setEntityAtId(entity, Integer.valueOf(positions[0]));
 			}
 			
-		} else if(data.contains("Kill"))
+		} else if(data.contains("Disconnect"))
 		{
 			String		id	= data.substring(5, data.length());
 			
 			Server.players.getEntityFromId(Integer.valueOf(id)).setDead(true);
+			Server.players.setEntityAtId(null, Integer.valueOf(id));
 			
 			System.out.println("Removed Entity ID " + id);
-			
-		} else {
-			
-			String message = "Player-" + ((JOGEudpServer) networking).getPlayerIDfromConnection(packet) + ": " + data;
-			
-			for(int i = 0; i < ((JOGEudpServer) networking).connections.size(); i++)
-			{
-				try
-				{
-					networking.sendStringToHost("Message " + message, ((JOGEudpServer) networking).connections.get(i));
-					
-				} catch (SocketException e)
-				{
-					e.printStackTrace();
-				}
-			}
-		}*/
+			ServerCore.server.connections.remove(id);
+		}
+	}
+
+	@Override
+	public void onReceiveTCPData(JOGEtcpNetworking connection, int clientID, String data)
+	{
+		System.out.println(data);
 	}
 }

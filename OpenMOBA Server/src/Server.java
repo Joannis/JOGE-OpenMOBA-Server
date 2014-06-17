@@ -1,7 +1,7 @@
 import JOGE.entities.JOGEEntityList;
-import JOGE.networking.lobby.JOGEtcpLobbyServer;
+import JOGE.networking.lobby.JOGEudpLobbyServer;
 
-public class Server extends JOGEtcpLobbyServer
+public class Server extends JOGEudpLobbyServer
 {
 	public static JOGEEntityList				entities;
 	public static JOGEEntityList				players;
