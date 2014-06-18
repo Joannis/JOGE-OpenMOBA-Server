@@ -31,7 +31,7 @@ public class MyServerProtocol extends JOGEProtocol
 			
 			if(socketID != -1 && Server.players.getEntityFromId(socketID) == null)
 			{
-				JOGEPhysicalEntity entity = (JOGEPhysicalEntity) new JOGEPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), 64D, 64D) {
+				MOBAPhysicalEntity entity = (MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), 64D, 64D, 100) {
 					
 					@Override
 					public void onCollideWith(JOGEPhysicalEntity entity) {
@@ -77,7 +77,6 @@ public class MyServerProtocol extends JOGEProtocol
 		{
 			try
 			{
-				System.out.println(Server.players.getSize());
 				net.sendStringToHost("players " + Server.players.getEntityString(), packet.getSocketAddress());
 				
 			} catch (SocketException e)
@@ -92,7 +91,7 @@ public class MyServerProtocol extends JOGEProtocol
 			
 			if(Integer.valueOf(positions[0]) >= 0 && Integer.valueOf(positions[0]) < Server.players.getSize())
 			{
-				JOGEEntity entity = Server.players.getEntityFromId(Integer.valueOf(positions[0]));
+				MOBAPhysicalEntity entity = (MOBAPhysicalEntity) Server.players.getEntityFromId(Integer.valueOf(positions[0]));
 				
 				entity.setPosX(Double.valueOf(positions[1]));
 				entity.setPosY(Double.valueOf(positions[2]));
