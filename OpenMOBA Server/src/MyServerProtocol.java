@@ -19,7 +19,8 @@ public class MyServerProtocol extends JOGEProtocol
 	{
 		JOGEudpServer net = ((JOGEudpServer) networking);
 		String data = net.readStringFromPacket(packet);
-				
+		
+		System.out.println("meep");
 		System.out.println(data);
 		
 		if(data.contains("Register"))
@@ -31,7 +32,7 @@ public class MyServerProtocol extends JOGEProtocol
 			
 			if(socketID != -1 && Server.players.getEntityFromId(socketID) == null)
 			{
-				MOBAPhysicalEntity entity = (MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), 64D, 64D, 100) {
+				MOBAPhysicalEntity entity = (MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), 64D, 64D, 1000) {
 					
 					@Override
 					public void onCollideWith(JOGEPhysicalEntity entity) {
@@ -86,7 +87,7 @@ public class MyServerProtocol extends JOGEProtocol
 			
 		} else if(data.contains("Update"))
 		{
-			String		position	= data.substring(7, data.length());
+			String		position	= data.substring(7,  data.length());
 			String[]	positions	= position.split("\\s+");
 			
 			if(Integer.valueOf(positions[0]) >= 0 && Integer.valueOf(positions[0]) < Server.players.getSize())
@@ -96,12 +97,25 @@ public class MyServerProtocol extends JOGEProtocol
 				entity.setPosX(Double.valueOf(positions[1]));
 				entity.setPosY(Double.valueOf(positions[2]));
 				
+				entity.setMaxHealth(1000);
+				entity.setHealth(entity.getHealth() - 1);
+				
 				Server.players.setEntityAtId(entity, Integer.valueOf(positions[0]));
+				
+				// check if the update is realistic
+				try
+				{
+					net.sendStringToHost("stats " + entity.getPosX() + " " + entity.getPosY() + " " + entity.getHealth() + " " + entity.getMaxHealth(), packet.getSocketAddress());
+					
+				} catch(SocketException e)
+				{
+					e.printStackTrace();
+				}
 			}
 			
 		} else if(data.contains("Disconnect"))
 		{
-			String		id	= data.substring(5, data.length());
+			int id = ServerCore.server.connections.indexOf(packet.getSocketAddress());
 			
 			Server.players.getEntityFromId(Integer.valueOf(id)).setDead(true);
 			Server.players.setEntityAtId(null, Integer.valueOf(id));

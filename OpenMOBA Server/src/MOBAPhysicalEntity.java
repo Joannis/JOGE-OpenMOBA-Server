@@ -55,6 +55,12 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 		this.health = health;
 		return this;
 	}
+	
+	public MOBAPhysicalEntity setMaxHealth(int maxHealth)
+	{
+		this.maxHealth = maxHealth;
+		return this;
+	}
 
 	@Override
 	public void onCollideWith(JOGEPhysicalEntity entity)
