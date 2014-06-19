@@ -40,6 +40,7 @@ public class MyServerProtocol extends JOGEProtocol
 					}
 				}.setDead(false);
 				
+				entity.playerAddress = net.connections.get(socketID);
 				Server.players[socketID] = entity;
 				
 				try
@@ -92,20 +93,25 @@ public class MyServerProtocol extends JOGEProtocol
 			if(Integer.valueOf(positions[0]) >= 0 && Integer.valueOf(positions[0]) < Server.players.length)
 			{
 				MOBAPhysicalEntity entity = (MOBAPhysicalEntity) Server.players[Integer.valueOf(positions[0])];
+
+				System.out.println(data);
 				
-				entity.setPosX(Double.valueOf(positions[1]));
-				entity.setPosY(Double.valueOf(positions[2]));
-				
-				Server.players[Integer.valueOf(positions[0])] = entity;
-				
-				// check if the update is realistic
-				try
+				if(entity != null)
 				{
-					net.sendStringToHost("stats " + entity.getPosX() + " " + entity.getPosY() + " " + entity.getHealth() + " " + entity.getMaxHealth(), packet.getSocketAddress());
+					entity.setPosX(Double.valueOf(positions[1]));
+					entity.setPosY(Double.valueOf(positions[2]));
 					
-				} catch(SocketException e)
-				{
-					e.printStackTrace();
+					Server.players[Integer.valueOf(positions[0])] = entity;
+					
+					// check if the update is realistic
+					try
+					{
+						net.sendStringToHost("stats " + entity.getPosX() + " " + entity.getPosY() + " " + entity.getHealth() + " " + entity.getMaxHealth(), packet.getSocketAddress());
+						
+					} catch(SocketException e)
+					{
+						e.printStackTrace();
+					}
 				}
 			}
 			
@@ -116,9 +122,6 @@ public class MyServerProtocol extends JOGEProtocol
 			Server.players[id] = null;
 			
 			System.out.println("Removed Entity ID " + id);
-			
-		} else if(data.startsWith("changeID"))
-		{
 			
 		}
 	}

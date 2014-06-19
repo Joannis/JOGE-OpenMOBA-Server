@@ -1,5 +1,6 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.net.SocketAddress;
 
 import javax.jws.Oneway;
 
@@ -13,6 +14,7 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	protected int maxHealth = 0;
 	protected double spawnX, spawnY;
 	protected String type = "PhysicalEntity";
+	public SocketAddress playerAddress = null;
 	
 	public MOBAPhysicalEntity(double x, double y, double hitboxWidth, double hitboxHeight, int maxHealth)
 	{
@@ -37,7 +39,6 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 		setDead(true);
 		setPosX(spawnX);
 		setPosY(spawnY);
-		//health = maxHealth;
 	}
 	
 	public int getHealth()

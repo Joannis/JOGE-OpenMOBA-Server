@@ -14,10 +14,31 @@ public class Server extends JOGEudpLobbyServer
 	
 	public void onRemoveConnection(int playerID)
 	{
+		System.out.println("kaas");
+		System.out.println("kaas");
+		System.out.println("kaas");
+		System.out.println("kaas");
+		
 		try
 		{
-			for(int i = 0; i < connections.size(); i++)
-				this.sendStringToHost("changeID " + i, connections.get(i));
+			for(int i = 0; i < players.length; i++)
+			{
+				if(players[i] != null)
+				{
+					int newID = connections.indexOf(players[i].playerAddress);
+					
+					if(i != newID)
+					{
+						if(newID != -1)
+						{
+							players[newID] = players[i];
+							sendStringToHost("id " + newID, connections.get(newID));
+						}
+						
+						players[i] = null;
+					}
+				}
+			}
 		
 		} catch(Exception e)
 		{
