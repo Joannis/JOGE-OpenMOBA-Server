@@ -20,17 +20,16 @@ public class MyServerProtocol extends JOGEProtocol
 		JOGEudpServer net = ((JOGEudpServer) networking);
 		String data = net.readStringFromPacket(packet);
 		
-		System.out.println("meep");
 		System.out.println(data);
 		
-		if(data.contains("Register"))
+		if(data.startsWith("Register"))
 		{
 			String		position	= data.substring(9, data.length());
 			String[]	positions	= position.split("\\s+");
 			
 			int socketID =  net.connections.indexOf(packet.getSocketAddress());
 			
-			if(socketID != -1 && Server.players.getEntityFromId(socketID) == null)
+			if(socketID != -1 && Server.players[socketID] == null)
 			{
 				MOBAPhysicalEntity entity = (MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), 64D, 64D, 1000) {
 					
@@ -41,7 +40,7 @@ public class MyServerProtocol extends JOGEProtocol
 					}
 				}.setDead(false);
 				
-				Server.players.addEntityToId(entity, socketID);
+				Server.players[socketID] = entity;
 				
 				try
 				{
@@ -63,7 +62,7 @@ public class MyServerProtocol extends JOGEProtocol
 				}
 			}
 			
-		} else if(data.contains("list"))
+		} else if(data.startsWith("list"))
 		{
 			try
 			{
@@ -74,33 +73,30 @@ public class MyServerProtocol extends JOGEProtocol
 				e.printStackTrace();
 			}
 			
-		}  else if(data.contains("players"))
+		}  else if(data.startsWith("players"))
 		{
 			try
 			{
-				net.sendStringToHost("players " + Server.players.getEntityString(), packet.getSocketAddress());
+				net.sendStringToHost("players " + MOBAEntityList.getEntityStringFromArray(Server.players), packet.getSocketAddress());
 				
 			} catch (SocketException e)
 			{
 				e.printStackTrace();
 			}
 			
-		} else if(data.contains("Update"))
+		} else if(data.startsWith("Update"))
 		{
 			String		position	= data.substring(7,  data.length());
 			String[]	positions	= position.split("\\s+");
 			
-			if(Integer.valueOf(positions[0]) >= 0 && Integer.valueOf(positions[0]) < Server.players.getSize())
+			if(Integer.valueOf(positions[0]) >= 0 && Integer.valueOf(positions[0]) < Server.players.length)
 			{
-				MOBAPhysicalEntity entity = (MOBAPhysicalEntity) Server.players.getEntityFromId(Integer.valueOf(positions[0]));
+				MOBAPhysicalEntity entity = (MOBAPhysicalEntity) Server.players[Integer.valueOf(positions[0])];
 				
 				entity.setPosX(Double.valueOf(positions[1]));
 				entity.setPosY(Double.valueOf(positions[2]));
 				
-				entity.setMaxHealth(1000);
-				entity.setHealth(entity.getHealth() - 1);
-				
-				Server.players.setEntityAtId(entity, Integer.valueOf(positions[0]));
+				Server.players[Integer.valueOf(positions[0])] = entity;
 				
 				// check if the update is realistic
 				try
@@ -113,15 +109,17 @@ public class MyServerProtocol extends JOGEProtocol
 				}
 			}
 			
-		} else if(data.contains("Disconnect"))
+		} else if(data.startsWith("Disconnect"))
 		{
 			int id = ServerCore.server.connections.indexOf(packet.getSocketAddress());
 			
-			Server.players.getEntityFromId(Integer.valueOf(id)).setDead(true);
-			Server.players.setEntityAtId(null, Integer.valueOf(id));
+			Server.players[id] = null;
 			
 			System.out.println("Removed Entity ID " + id);
-			ServerCore.server.connections.remove(id);
+			
+		} else if(data.startsWith("changeID"))
+		{
+			
 		}
 	}
 

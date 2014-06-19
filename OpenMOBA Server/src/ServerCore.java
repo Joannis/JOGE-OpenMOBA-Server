@@ -38,7 +38,8 @@ public class ServerCore extends JOGEGame
 		new ServerCore();
 	}
 	
-	public void onTick() {
+	public void onTick()
+	{
 		if(server != null)
 			server.onTick();
 	}
