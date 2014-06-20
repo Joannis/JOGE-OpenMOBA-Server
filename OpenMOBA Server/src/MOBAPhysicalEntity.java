@@ -46,8 +46,8 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	{
 		super.onTick();
 		
-		if(getType() == "MOBAentityPlayer")
-			health--;
+		if(getType() == "MOBAentityPlayer" && health > 0)
+			health -= 5;
 		
 		if(health <= 0)
 			freezeMovement = true;
@@ -56,6 +56,13 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 		
 		if(health < 0)
 			health = 0;
+		
+		if(health == 0)
+		{
+			setPosX(spawnX);
+			setPosY(spawnY);
+			health = getMaxHealth();
+		}
 		
 		if(health > maxHealth)
 			health = maxHealth;
