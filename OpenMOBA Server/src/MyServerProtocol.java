@@ -93,15 +93,16 @@ public class MyServerProtocol extends JOGEProtocol
 			if(Integer.valueOf(positions[0]) >= 0 && Integer.valueOf(positions[0]) < Server.players.length)
 			{
 				MOBAPhysicalEntity entity = (MOBAPhysicalEntity) Server.players[Integer.valueOf(positions[0])];
-
-				System.out.println(data);
 				
 				if(entity != null)
 				{
-					entity.setPosX(Double.valueOf(positions[1]));
-					entity.setPosY(Double.valueOf(positions[2]));
-					
-					Server.players[Integer.valueOf(positions[0])] = entity;
+					if(!entity.freezeMovement)
+					{
+						entity.setPosX(Double.valueOf(positions[1]));
+						entity.setPosY(Double.valueOf(positions[2]));
+						
+						Server.players[Integer.valueOf(positions[0])] = entity;
+					}
 					
 					// check if the update is realistic
 					try

@@ -15,6 +15,7 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	protected double spawnX, spawnY;
 	protected String type = "PhysicalEntity";
 	public SocketAddress playerAddress = null;
+	protected boolean freezeMovement = false;
 	
 	public MOBAPhysicalEntity(double x, double y, double hitboxWidth, double hitboxHeight, int maxHealth)
 	{
@@ -47,6 +48,14 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 		
 		if(getType() == "MOBAentityPlayer")
 			health--;
+		
+		if(health <= 0)
+			freezeMovement = true;
+		else
+			freezeMovement = false;
+		
+		if(health < 0)
+			health = 0;
 		
 		if(health > maxHealth)
 			health = maxHealth;
