@@ -41,6 +41,17 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 		setPosY(spawnY);
 	}
 	
+	public void onTick()
+	{
+		super.onTick();
+		
+		if(getType() == "MOBAentityPlayer")
+			health--;
+		
+		if(health > maxHealth)
+			health = maxHealth;
+	}
+	
 	public int getHealth()
 	{
 		return health;

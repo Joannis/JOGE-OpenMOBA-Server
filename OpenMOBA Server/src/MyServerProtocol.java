@@ -31,14 +31,14 @@ public class MyServerProtocol extends JOGEProtocol
 			
 			if(socketID != -1 && Server.players[socketID] == null)
 			{
-				MOBAPhysicalEntity entity = (MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), 64D, 64D, 1000) {
+				MOBAPhysicalEntity entity = ((MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), 64D, 64D, 1000) {
 					
 					@Override
 					public void onCollideWith(JOGEPhysicalEntity entity) {
 						// TODO Auto-generated method stub
 						
 					}
-				}.setDead(false);
+				}.setDead(false)).setType("MOBAentityPlayer");
 				
 				entity.playerAddress = net.connections.get(socketID);
 				Server.players[socketID] = entity;

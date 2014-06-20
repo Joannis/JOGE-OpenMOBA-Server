@@ -14,11 +14,6 @@ public class Server extends JOGEudpLobbyServer
 	
 	public void onRemoveConnection(int playerID)
 	{
-		System.out.println("kaas");
-		System.out.println("kaas");
-		System.out.println("kaas");
-		System.out.println("kaas");
-		
 		try
 		{
 			for(int i = 0; i < players.length; i++)
@@ -47,5 +42,16 @@ public class Server extends JOGEudpLobbyServer
 		
 		if(Server.players[playerID] != null)
 			Server.players[playerID].setDead(true);
+	}
+	
+	public void onTick()
+	{
+		super.onTick();
+		
+		entities.onTick();
+		
+		for(int i = 0; i < players.length; i++)
+			if(players[i] != null)
+				players[i].onTick();
 	}
 }
