@@ -19,22 +19,22 @@ public class MOBAEntityList extends JOGEEntityList
 		entityList.ensureCapacity(totalEntities);
 		
 		// ID, coordX, coordY, width, height, health, max-health, type
-		for(int i = 0; i < (int) (data.length / 8); i++)
+		for(int i = 0; i < (int) (data.length / 9); i++)
 		{
-			if(Integer.valueOf(data[i*8 + 5]) <= 0)
+			if(Integer.valueOf(data[i*9 + 5]) <= 0)
 				dead = true;
 			else
 				dead = false;
 			
-			entityList.add(Integer.valueOf(data[i*8]), ((MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(data[i*8 + 1]), Double.valueOf(data[i*8 + 2]),
-					Double.valueOf(data[i*8 + 3]), Double.valueOf(data[i*8 + 4]), Integer.valueOf(data[i*8 + 6]))
+			entityList.add(Integer.valueOf(data[i*9]), ((MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(data[i*9 + 1]), Double.valueOf(data[i*9 + 2]),
+					Double.valueOf(data[i*9 + 3]), Double.valueOf(data[i*9 + 4]), Integer.valueOf(data[i*9 + 6]))
 			{
 				public void onCollideWith(JOGEPhysicalEntity entity)
 				{
 					
 				}
 				
-			}.setDead(dead)).setHealth(Integer.valueOf(data[i*8 + 5])).setType(data[i*8 + 7]));
+			}.setDead(dead)).setHealth(Integer.valueOf(data[i*9 + 5])).setType(data[i*9 + 7]).setRotation(Double.valueOf(data[i*9 + 8])));
 		}
 		
 		return entityList;
@@ -53,7 +53,8 @@ public class MOBAEntityList extends JOGEEntityList
 				{
 					s += i +  " " + entitylist[i].getPosX() + " " + entitylist[i].getPosY() + " " + ((MOBAPhysicalEntity) entitylist[i]).getHitboxWidth()
 						+ " " + ((MOBAPhysicalEntity) entitylist[i]).getHitboxHeight() + " " + ((MOBAPhysicalEntity) entitylist[i]).getHealth() + " " +
-							((MOBAPhysicalEntity) entitylist[i]).getMaxHealth() + " " + ((MOBAPhysicalEntity) entitylist[i]).getType() + " ";
+							((MOBAPhysicalEntity) entitylist[i]).getMaxHealth() + " " + ((MOBAPhysicalEntity) entitylist[i]).getType() + " " +
+								((MOBAPhysicalEntity) entitylist[i]).rotation + " ";
 					
 				} else {
 					

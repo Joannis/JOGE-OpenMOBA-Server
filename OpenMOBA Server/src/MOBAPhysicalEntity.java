@@ -16,6 +16,7 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	protected String type = "PhysicalEntity";
 	public SocketAddress playerAddress = null;
 	protected boolean freezeMovement = false;
+	public double rotation = 0D;
 	
 	public MOBAPhysicalEntity(double x, double y, double hitboxWidth, double hitboxHeight, int maxHealth)
 	{
@@ -105,6 +106,17 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	{
 		this.type = type;
 		return this;
+	}
+	
+	public MOBAPhysicalEntity setRotation(double rotation)
+	{
+		this.rotation = rotation;
+		return this;
+	}
+	
+	public double getRotation()
+	{
+		return rotation;
 	}
 	
 	public static void renderEntity(JOGEEntity entity, Graphics g)

@@ -100,6 +100,7 @@ public class MyServerProtocol extends JOGEProtocol
 					{
 						entity.setPosX(Double.valueOf(positions[1]));
 						entity.setPosY(Double.valueOf(positions[2]));
+						entity.rotation = Double.valueOf(positions[3]);
 						
 						Server.players[Integer.valueOf(positions[0])] = entity;
 					}
