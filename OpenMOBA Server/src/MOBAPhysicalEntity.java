@@ -1,5 +1,7 @@
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.geom.Rectangle2D;
 import java.net.SocketAddress;
 
 import javax.jws.Oneway;
@@ -69,6 +71,51 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 		
 		if(health > maxHealth)
 			health = maxHealth;
+		
+		if(getState().contains("attacking") && getType().contains("MOBAentityPlayer"))
+		{
+			double rot = getRenderedRotation();
+			double range = 32D;
+			Rectangle2D rect = null;
+			
+			if(rot == 0 || rot == 360)
+			{
+				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2), (int) (getPosY() - getHitboxHeight() / 2 - range), (int) getHitboxWidth(), (int) range);
+				
+			} else if(rot == 45)
+			{
+				
+				
+			} else if(rot == 90)
+			{
+				rect = new Rectangle((int) (getPosX() + getHitboxWidth() / 2), (int) (getPosY() - getHitboxHeight() / 2), (int) range, (int) getHitboxHeight());
+				
+			} else if(rot == 135)
+			{
+				
+				
+			} else if(rot == 180)
+			{
+				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2), (int) (getPosY() + getHitboxHeight() / 2), (int) getHitboxWidth(), (int) range);
+				
+			} else if(rot == 225)
+			{
+				
+				
+			} else if(rot == 270)
+			{
+				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2 - range), (int) (getPosY() + getHitboxHeight() / 2), (int) range, (int) getHitboxHeight());
+				
+			} else {// if(rot == 315)
+				
+				
+			}
+			
+			if(rect != null)
+			{
+				System.out.println(rect.getX() + " - " + rect.getY());
+			}
+		}
 	}
 	
 	public int getHealth()
