@@ -17,6 +17,8 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	public SocketAddress playerAddress = null;
 	protected boolean freezeMovement = false;
 	public double rotation = 0D;
+	public double renderedDegrees = 0D;
+	private String state = "idle";
 	
 	public MOBAPhysicalEntity(double x, double y, double hitboxWidth, double hitboxHeight, int maxHealth)
 	{
@@ -122,5 +124,28 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	public static void renderEntity(JOGEEntity entity, Graphics g)
 	{
 		
+	}
+
+	public MOBAPhysicalEntity setRenderedRotation(double renderedDegrees)
+	{
+		this.renderedDegrees = renderedDegrees;
+		
+		return this;
+	}
+	
+	public double getRenderedRotation()
+	{
+		return renderedDegrees;
+	}
+
+	public MOBAPhysicalEntity setState(String state)
+	{
+		this.state  = state;
+		
+		return this;
+	}
+
+	public String getState() {
+		return state;
 	}
 }
