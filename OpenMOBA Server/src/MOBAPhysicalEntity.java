@@ -51,9 +51,6 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	{
 		super.onTick();
 		
-		if(getType() == "MOBAentityPlayer" && health > 0)
-			health -= 5;
-		
 		if(health <= 0)
 			freezeMovement = true;
 		else
@@ -80,7 +77,7 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 			
 			if(rot == 0 || rot == 360)
 			{
-				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2), (int) (getPosY() - getHitboxHeight() / 2 - range), (int) getHitboxWidth(), (int) range);
+				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2), (int) (getPosY() - getHitboxHeight() / 2 - range), 20, (int) range);
 				
 			} else if(rot == 45)
 			{
@@ -88,7 +85,7 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 				
 			} else if(rot == 90)
 			{
-				rect = new Rectangle((int) (getPosX() + getHitboxWidth() / 2), (int) (getPosY() - getHitboxHeight() / 2), (int) range, (int) getHitboxHeight());
+				rect = new Rectangle((int) (getPosX() + getHitboxWidth() / 2), (int) (getPosY() - getHitboxHeight() / 2), (int) range, 20);
 				
 			} else if(rot == 135)
 			{
@@ -96,7 +93,7 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 				
 			} else if(rot == 180)
 			{
-				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2), (int) (getPosY() + getHitboxHeight() / 2), (int) getHitboxWidth(), (int) range);
+				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2), (int) (getPosY() + getHitboxHeight() / 2), 20, (int) range);
 				
 			} else if(rot == 225)
 			{
@@ -104,7 +101,7 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 				
 			} else if(rot == 270)
 			{
-				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2 - range), (int) (getPosY() + getHitboxHeight() / 2), (int) range, (int) getHitboxHeight());
+				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2 - range), (int) (getPosY() + getHitboxHeight() / 2), (int) range, 20);
 				
 			} else {// if(rot == 315)
 				
@@ -114,6 +111,17 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 			if(rect != null)
 			{
 				System.out.println(rect.getX() + " - " + rect.getY());
+				
+				for(int j = 0; j < Server.players.length; j++)
+					if(Server.players[j] instanceof MOBAPhysicalEntity)
+					{
+						System.out.println(((MOBAPhysicalEntity)(Server.players[j])).getHitbox().getX());
+						
+						if(((MOBAPhysicalEntity)(Server.players[j])).getHitbox().intersects(rect))
+						{
+							((MOBAPhysicalEntity) Server.players[j]).damage(10);
+						}
+					}
 			}
 		}
 	}

@@ -20,8 +20,6 @@ public class MyServerProtocol extends JOGEProtocol
 		JOGEudpServer net = ((JOGEudpServer) networking);
 		String data = net.readStringFromPacket(packet);
 		
-		System.out.println(data);
-		
 		if(data.startsWith("Register"))
 		{
 			String		position	= data.substring(9, data.length());
@@ -31,7 +29,7 @@ public class MyServerProtocol extends JOGEProtocol
 			
 			if(socketID != -1 && Server.players[socketID] == null)
 			{
-				MOBAPhysicalEntity entity = ((MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), 64D, 64D, 1000) {
+				MOBAPhysicalEntity entity = ((MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), 50D, 22D, 1000) {
 					
 					@Override
 					public void onCollideWith(JOGEPhysicalEntity entity) {
