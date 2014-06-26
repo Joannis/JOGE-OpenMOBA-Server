@@ -73,55 +73,48 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 		{
 			double rot = getRenderedRotation();
 			double range = 32D;
+			double weaponWidth = 20D;
 			Rectangle2D rect = null;
 			
 			if(rot == 0 || rot == 360)
 			{
-				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2), (int) (getPosY() - getHitboxHeight() / 2 - range), 20, (int) range);
+				rect = new Rectangle((int) (getPosX() + getHitboxWidth() / 2 - (int) weaponWidth), (int) (getPosY() - getHitboxHeight() / 2 - range), (int) weaponWidth, (int) range);
 				
 			} else if(rot == 45)
 			{
-				
+				rect = new Rectangle((int) (getPosX() + getHitboxWidth() / 2), (int) (getPosY() - getHitboxHeight() / 2 - range), (int) range, (int) range);
 				
 			} else if(rot == 90)
 			{
-				rect = new Rectangle((int) (getPosX() + getHitboxWidth() / 2), (int) (getPosY() - getHitboxHeight() / 2), (int) range, 20);
+				rect = new Rectangle((int) (getPosX() + getHitboxWidth() / 2), (int) (getPosY() + getHitboxHeight() / 2 - weaponWidth), (int) range, (int) weaponWidth);
 				
 			} else if(rot == 135)
 			{
-				
+				rect = new Rectangle((int) (getPosX() + getHitboxWidth() / 2), (int) (getPosY() + getHitboxHeight() / 2), (int) range, (int) range);
 				
 			} else if(rot == 180)
 			{
-				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2), (int) (getPosY() + getHitboxHeight() / 2), 20, (int) range);
+				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2), (int) (getPosY() + getHitboxHeight() / 2), (int) weaponWidth, (int) range);
 				
 			} else if(rot == 225)
 			{
-				
+				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2 - range), (int) (getPosY() + getHitboxHeight() / 2), (int) range, (int) range);
 				
 			} else if(rot == 270)
 			{
-				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2 - range), (int) (getPosY() + getHitboxHeight() / 2), (int) range, 20);
+				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2 - range), (int) (getPosY() - getHitboxHeight() / 2), (int) range, (int) weaponWidth);
 				
 			} else {// if(rot == 315)
 				
-				
+				rect = new Rectangle((int) (getPosX() - getHitboxWidth() / 2 - range), (int) (getPosY() - getHitboxHeight() / 2), (int) range, (int) range);
 			}
 			
 			if(rect != null)
 			{
-				System.out.println(rect.getX() + " - " + rect.getY());
-				
 				for(int j = 0; j < Server.players.length; j++)
 					if(Server.players[j] instanceof MOBAPhysicalEntity)
-					{
-						System.out.println(((MOBAPhysicalEntity)(Server.players[j])).getHitbox().getX());
-						
 						if(((MOBAPhysicalEntity)(Server.players[j])).getHitbox().intersects(rect))
-						{
 							((MOBAPhysicalEntity) Server.players[j]).damage(10);
-						}
-					}
 			}
 		}
 	}
