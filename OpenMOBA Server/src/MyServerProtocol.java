@@ -29,7 +29,7 @@ public class MyServerProtocol extends JOGEProtocol
 			
 			if(socketID != -1 && Server.players[socketID] == null)
 			{
-				MOBAPhysicalEntity entity = ((MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), 50D, 22D, 1000) {
+				MOBAPhysicalEntity entity = ((MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), /*50D*/22D, 22D, 1000) {
 					
 					@Override
 					public void onCollideWith(JOGEPhysicalEntity entity) {

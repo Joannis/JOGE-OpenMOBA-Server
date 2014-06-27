@@ -34,6 +34,9 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	
 	public void damage(int damage)
 	{
+		if(state.contains("blocking"))
+			damage /= 2;
+		
 		health -= damage;
 		
 		if(health <= 0)
@@ -73,7 +76,7 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 		{
 			double rot = getRenderedRotation();
 			double range = 32D;
-			double weaponWidth = 20D;
+			double weaponWidth = 40D;
 			Rectangle2D rect = null;
 			
 			if(rot == 0 || rot == 360)
