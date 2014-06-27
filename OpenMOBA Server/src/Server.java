@@ -1,3 +1,4 @@
+import JOGE.entities.JOGEPhysicalEntity;
 import JOGE.networking.lobby.JOGEudpLobbyServer;
 
 public class Server extends JOGEudpLobbyServer
@@ -53,5 +54,14 @@ public class Server extends JOGEudpLobbyServer
 		for(int i = 0; i < players.length; i++)
 			if(players[i] != null)
 				players[i].onTick();
+
+		for(int i = 0; i < entities.getSize(); i++)
+			for(int j = 0; j < players.length; j++)
+				if(entities.getEntityFromId(i) instanceof JOGEPhysicalEntity && players[j] instanceof JOGEPhysicalEntity)
+					if(((JOGEPhysicalEntity)(entities.getEntityFromId(i))).getHitbox().intersects(((JOGEPhysicalEntity)(players[j])).getHitbox()))
+					{
+						((JOGEPhysicalEntity)(entities.getEntityFromId(i))).onCollideWith(((JOGEPhysicalEntity)(players[j])));
+						((JOGEPhysicalEntity)(players[j])).onCollideWith(((JOGEPhysicalEntity)(entities.getEntityFromId(i))));
+					}
 	}
 }

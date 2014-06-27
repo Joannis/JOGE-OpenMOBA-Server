@@ -21,6 +21,7 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	public double rotation = 0D;
 	public double renderedDegrees = 0D;
 	private String state = "idle";
+	protected MOBAPhysicalEntity host = null;
 	
 	public MOBAPhysicalEntity(double x, double y, double hitboxWidth, double hitboxHeight, int maxHealth)
 	{
@@ -34,7 +35,7 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	
 	public void damage(int damage)
 	{
-		if(state.contains("blocking"))
+		if(state.contains("defending"))
 			damage /= 2;
 		
 		health -= damage;
@@ -59,7 +60,7 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 		else
 			freezeMovement = false;
 		
-		if(health < 0)
+		if(health < 0 && maxHealth > 0)
 			health = 0;
 		
 		if(health == 0)
@@ -198,5 +199,15 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 
 	public String getState() {
 		return state;
+	}
+	
+	public MOBAPhysicalEntity getHost()
+	{
+		return host;
+	}
+	
+	public void setHost(MOBAPhysicalEntity h)
+	{
+		host = h;
 	}
 }

@@ -101,4 +101,9 @@ public class MOBAEntityList extends JOGEEntityList
 		entities.remove(id);
 		entities.ensureCapacity(id + 1);
 	}
+
+	public int getIDfromEntity(MOBAPhysicalEntity mobaPhysicalEntity)
+	{
+		return entities.indexOf(mobaPhysicalEntity);
+	}
 }

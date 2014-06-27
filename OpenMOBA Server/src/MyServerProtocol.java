@@ -99,6 +99,41 @@ public class MyServerProtocol extends JOGEProtocol
 						entity.setPosX(Double.valueOf(positions[1]));
 						entity.setPosY(Double.valueOf(positions[2]));
 						entity.renderedDegrees = Double.valueOf(positions[3]);
+						
+						if(positions[4].contains("casting") && !entity.getState().contains("casting"))
+						{
+							// shoot
+							MOBAPhysicalEntity projectile = ((MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(positions[1]), Double.valueOf(positions[2]), /*50D*/16D, 16D, 1000) {
+								
+								@Override
+								public void onCollideWith(JOGEPhysicalEntity entity)
+								{
+									if(entity.equals(getHost()))
+										return;
+									
+									if(entity instanceof MOBAPhysicalEntity)
+									{
+										MOBAPhysicalEntity entity2 = (MOBAPhysicalEntity) entity;
+										
+										if(entity2.getType().contains("MOBAentityPlayer"))
+											entity2.damage(50);
+										
+										die();
+										
+										Server.entities.removeEntityAtId(Server.entities.getIDfromEntity(this));
+										
+									} else {
+										
+										System.out.println("Not a player");
+									}
+								}
+							}.setDead(false)).setType("MOBAmagicBulletProjectile").setRenderedRotation(Double.valueOf(positions[3]));
+							
+							projectile.setHost(entity);
+							
+							Server.entities.addEntityToList(projectile);
+						}
+						
 						entity.setState(positions[4]);
 						
 						Server.players[Integer.valueOf(positions[0])] = entity;
