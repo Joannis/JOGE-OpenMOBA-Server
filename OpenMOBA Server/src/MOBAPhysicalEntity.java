@@ -22,6 +22,7 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	public double renderedDegrees = 0D;
 	private String state = "idle";
 	protected MOBAPhysicalEntity host = null;
+	protected int id = 0;
 	
 	public MOBAPhysicalEntity(double x, double y, double hitboxWidth, double hitboxHeight, int maxHealth)
 	{
@@ -39,7 +40,6 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 			damage /= 2;
 		
 		health -= damage;
-		
 		if(health <= 0)
 			die();
 	}
@@ -54,6 +54,12 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	public void onTick()
 	{
 		super.onTick();
+		
+		if(isDead() && getType().toLowerCase().contains("projectile"))
+		{
+			System.out.println(getID());
+			Server.entities.removeEntityAtId(getID());
+		}
 		
 		if(health <= 0)
 			freezeMovement = true;
@@ -209,5 +215,16 @@ public class MOBAPhysicalEntity extends JOGEPhysicalEntity
 	public void setHost(MOBAPhysicalEntity h)
 	{
 		host = h;
+	}
+
+	public int getID()
+	{
+		return id;
+	}
+
+	public MOBAPhysicalEntity setID(int newID)
+	{
+		id = newID;
+		return this;
 	}
 }

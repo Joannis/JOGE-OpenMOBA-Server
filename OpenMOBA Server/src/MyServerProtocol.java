@@ -22,21 +22,18 @@ public class MyServerProtocol extends JOGEProtocol
 		
 		if(data.startsWith("Register"))
 		{
-			String		position	= data.substring(9, data.length());
-			String[]	positions	= position.split("\\s+");
-			
 			int socketID =  net.connections.indexOf(packet.getSocketAddress());
 			
 			if(socketID != -1 && Server.players[socketID] == null)
 			{
-				MOBAPhysicalEntity entity = ((MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(positions[0]), Double.valueOf(positions[1]), /*50D*/22D, 22D, 1000) {
+				MOBAPhysicalEntity entity = ((MOBAPhysicalEntity) new MOBAPhysicalEntity(400D, 400D, /*50D*/22D, 22D, 1000) {
 					
 					@Override
 					public void onCollideWith(JOGEPhysicalEntity entity) {
 						// TODO Auto-generated method stub
 						
 					}
-				}.setDead(false)).setType("MOBAentityPlayer");
+				}.setDead(false)).setType("MOBAentityPlayer").setID(socketID);
 				
 				entity.playerAddress = net.connections.get(socketID);
 				Server.players[socketID] = entity;
@@ -50,7 +47,13 @@ public class MyServerProtocol extends JOGEProtocol
 					e.printStackTrace();
 				}
 				
-				System.out.println("New Entity @ x=" + positions[0] + " and y=" + positions[1] + " with ID " + socketID);
+				try {
+					net.sendStringToHost("stats " + entity.getPosX() + " " + entity.getPosY() + " " + entity.getHealth() + " " + entity.getMaxHealth(), packet.getSocketAddress());
+				} catch (SocketException e) {
+					e.printStackTrace();
+				}
+				
+				System.out.println("New Entity with ID " + socketID);
 				
 			} else {
 				
@@ -113,21 +116,16 @@ public class MyServerProtocol extends JOGEProtocol
 									
 									if(entity instanceof MOBAPhysicalEntity)
 									{
-										MOBAPhysicalEntity entity2 = (MOBAPhysicalEntity) entity;
-										
-										if(entity2.getType().contains("MOBAentityPlayer"))
-											entity2.damage(50);
+										((MOBAPhysicalEntity) entity).damage(500);
 										
 										die();
-										
-										Server.entities.removeEntityAtId(Server.entities.getIDfromEntity(this));
 										
 									} else {
 										
 										System.out.println("Not a player");
 									}
 								}
-							}.setDead(false)).setType("MOBAmagicBulletProjectile").setRenderedRotation(Double.valueOf(positions[3]));
+							}.setDead(false)).setType("MOBAmagicBulletProjectile").setRenderedRotation(Double.valueOf(positions[3])).setID(Server.entities.getSize());
 							
 							projectile.setHost(entity);
 							
@@ -140,6 +138,7 @@ public class MyServerProtocol extends JOGEProtocol
 					}
 					
 					// check if the update is realistic
+					
 					try
 					{
 						net.sendStringToHost("stats " + entity.getPosX() + " " + entity.getPosY() + " " + entity.getHealth() + " " + entity.getMaxHealth(), packet.getSocketAddress());

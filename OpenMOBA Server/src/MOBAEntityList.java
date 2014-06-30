@@ -19,24 +19,22 @@ public class MOBAEntityList extends JOGEEntityList
 		entityList.ensureCapacity(totalEntities);
 		
 		// ID, coordX, coordY, width, height, health, max-health, type
-		for(int i = 0; i < (int) (data.length / 10); i++)
+		for(int i = 0; i < (int) (data.length / 12); i++)
 		{
-			System.out.println(data[i*10 + 9]);
-			
-			if(Integer.valueOf(data[i*10 + 5]) <= 0)
+			if(Integer.valueOf(data[i*12 + 5]) <= 0)
 				dead = true;
 			else
 				dead = false;
 			
-			entityList.add(Integer.valueOf(data[i*10]), ((MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(data[i*10 + 1]), Double.valueOf(data[i*10 + 2]),
-					Double.valueOf(data[i*10 + 3]), Double.valueOf(data[i*10 + 4]), Integer.valueOf(data[i*10 + 6]))
+			entityList.add(Integer.valueOf(data[i*12]), ((MOBAPhysicalEntity) new MOBAPhysicalEntity(Double.valueOf(data[i*12 + 1]), Double.valueOf(data[i*12 + 2]),
+					Double.valueOf(data[i*12 + 3]), Double.valueOf(data[i*12 + 4]), Integer.valueOf(data[i*12 + 6]))
 			{
 				public void onCollideWith(JOGEPhysicalEntity entity)
 				{
 					
 				}
 				
-			}.setDead(dead)).setHealth(Integer.valueOf(data[i*10 + 5])).setType(data[i*10 + 7]).setRenderedRotation(Double.valueOf(data[i*10 + 8])).setState(data[i*10 + 9]));
+			}.setDead(dead)).setHealth(Integer.valueOf(data[i*12 + 5])).setType(data[i*12 + 7]).setRenderedRotation(Double.valueOf(data[i*12 + 8])).setState(data[i*12 + 9]).setID(entityList.size()));
 		}
 		
 		return entityList;
@@ -53,10 +51,23 @@ public class MOBAEntityList extends JOGEEntityList
 			{
 				if(entitylist[i] instanceof MOBAPhysicalEntity)
 				{
+					String hostType = "none";
+					int hostID = -1;
+					
+					if(((MOBAPhysicalEntity) entitylist[i]).getHost() != null)
+					{
+						hostType = ((MOBAPhysicalEntity) entitylist[i]).getHost().getType();
+						hostID = getIDfromEntity(((MOBAPhysicalEntity) entitylist[i]).getHost());
+						
+						if(hostID == -1)
+							hostID = ((MOBAPhysicalEntity) entitylist[i]).getHost().getID();
+					}
+					
 					s += i +  " " + entitylist[i].getPosX() + " " + entitylist[i].getPosY() + " " + ((MOBAPhysicalEntity) entitylist[i]).getHitboxWidth()
 						+ " " + ((MOBAPhysicalEntity) entitylist[i]).getHitboxHeight() + " " + ((MOBAPhysicalEntity) entitylist[i]).getHealth() + " " +
 							((MOBAPhysicalEntity) entitylist[i]).getMaxHealth() + " " + ((MOBAPhysicalEntity) entitylist[i]).getType() + " " +
-								((MOBAPhysicalEntity) entitylist[i]).renderedDegrees + " " + ((MOBAPhysicalEntity) entitylist[i]).getState() + " ";
+								((MOBAPhysicalEntity) entitylist[i]).renderedDegrees + " " + ((MOBAPhysicalEntity) entitylist[i]).getState() + " "
+								+ hostType + " " + hostID + " ";
 					
 				} else {
 					
@@ -79,10 +90,20 @@ public class MOBAEntityList extends JOGEEntityList
 			{
 				if(entitylist[i] instanceof MOBAPhysicalEntity)
 				{
+					String hostType = "none";
+					int hostID = -1;
+					
+					if(((MOBAPhysicalEntity) entitylist[i]).getHost() != null)
+					{
+						hostType = ((MOBAPhysicalEntity) entitylist[i]).getHost().getType();
+						hostID = ((MOBAPhysicalEntity) entitylist[i]).getID();
+					}
+					
 					s += i +  " " + entitylist[i].getPosX() + " " + entitylist[i].getPosY() + " " + ((MOBAPhysicalEntity) entitylist[i]).getHitboxWidth()
 						+ " " + ((MOBAPhysicalEntity) entitylist[i]).getHitboxHeight() + " " + ((MOBAPhysicalEntity) entitylist[i]).getHealth() + " " +
 							((MOBAPhysicalEntity) entitylist[i]).getMaxHealth() + " " + ((MOBAPhysicalEntity) entitylist[i]).getType() + " " +
-									((MOBAPhysicalEntity) entitylist[i]).renderedDegrees + " " + ((MOBAPhysicalEntity) entitylist[i]).getState() + " ";
+									((MOBAPhysicalEntity) entitylist[i]).renderedDegrees + " " + ((MOBAPhysicalEntity) entitylist[i]).getState() + " "
+									+ hostType + " " + hostID + " ";
 					
 				} else {
 					
@@ -100,6 +121,10 @@ public class MOBAEntityList extends JOGEEntityList
 	{
 		entities.remove(id);
 		entities.ensureCapacity(id + 1);
+		
+		for(int i = 0; i < entities.size(); i++)
+			if(entities.get(i) instanceof MOBAPhysicalEntity)
+				((MOBAPhysicalEntity) entities.get(i)).setID(i);
 	}
 
 	public int getIDfromEntity(MOBAPhysicalEntity mobaPhysicalEntity)
